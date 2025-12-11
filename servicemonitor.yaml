@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+  labels:
+    release: prometheus
+  name: generic
+  namespace: prometheus-operator
+spec:
+  endpoints:
+  - interval: 30s
+    path: /metricz
+    targetPort: http
+  jobLabel: generic
+  namespaceSelector:
+    any: true  
+  selector:
+    matchLabels:
+      metricz: "true"

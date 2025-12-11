@@ -1,0 +1,9 @@
+{{- if .Values.ingress.phpfpm }}
+apiVersion: v1
+data:
+  SCRIPT_FILENAME: /app/public/index.php
+kind: ConfigMap
+metadata:
+  annotations:
+  name: {{ include "app.fullname" . }}
+{{- end }}

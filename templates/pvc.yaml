@@ -1,0 +1,15 @@
+{{- if .Values.pvc }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pvc.name }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.pvc.storage }}
+  storageClassName: nfs
+{{- end }}

@@ -1,0 +1,29 @@
+{{- if .Values.migration }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "app.fullname" . }}-migrate
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec: 
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      restartPolicy: Never
+      containers:
+        - name: {{ .Values.containerName }}-migration
+          image: "{{ .Values.image.repository }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "sh"
+            - "-c"
+            - "npm run migration:run"
+          {{- if .Values.env }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          {{- end }}
+{{- end }}
